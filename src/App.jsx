@@ -1,34 +1,41 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { useState } from "react";
+import { Configuration, OpenAIApi } from "openai";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [prompt, setPrompt] = useState("");
+  const [result, setResult] = useState("");
 
+ 
+
+  const configuration = new Configuration({
+    apiKey:import.meta.env.VITE_OPENAI_API_KEY,
+  });
+  const openai = new OpenAIApi(configuration);
+  const generateResponse = async () => {
+    const res = await openai.createCompletion({
+      model: "text-davinci-003",
+      prompt: prompt,
+      temperature: 0.7,
+      max_tokens: 1084,
+      top_p: 1,
+      best_of: 8,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+    });
+    setResult(res.data.choices[0].text);
+  };
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    <div className="app-main">
+      <h3>chatGPT</h3>
+      <input
+        placeholder="type something"
+        onChange={(e) => setPrompt(e.target.value)}
+      ></input>
+      <button onClick={generateResponse}> submit</button>
+      <h4> {result}</h4>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
