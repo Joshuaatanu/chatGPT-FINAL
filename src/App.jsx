@@ -21,11 +21,11 @@ function App() {
 
   const doStuff = async () => {
     let object = { ...option, prompt: input };
-    // console.log(object);
+    
     const response = await openai.createCompletion(object);
     setResult(response.data.choices[0].text)
   };
-  console.log(option);
+
 
   // const generateResponse = async () => {
   //   const res = await openai.createCompletion({});
